@@ -130,3 +130,13 @@ Conserjería — va a los conserjes
 - Al enviar: se crea una AuthRequest por cada unidad válida, se notifica al propietario/arrendatario de cada una, y el modal confirma el envío
 
 - Los residentes afectados ven las solicitudes en su sección "Autorizaciones Solicitadas" y pueden aprobar/rechazar individualmente
+
+## v6.0.0
+
+- Cambio de unidad + valor al mismo tiempo: Al cambiar la unidad de "4B" a "8C", el unitValue se aplicaba a la unidad antigua (4B) en lugar de la nueva (8C), dejando 4B con el precio erróneo y 8C sin valor correcto.
+
+- Unidad anterior no se limpiaba: Al reasignar un usuario a una nueva unidad, el registro de pago de la unidad anterior permanecía intacto en Finanzas, con el nombre del usuario anterior aún asociado.
+
+- Si el admin cambia el valor de arriendo/cuota de una unidad, el residente recibe una notificación con el nuevo desglose: $X (unidad) + $Y (gastos comunes) = $Z total
+
+- Si se reasigna a una nueva unidad, también recibe notificación de la asignación
