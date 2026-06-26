@@ -28,3 +28,28 @@
 - Añadido un aviso de instrucción al inicio de la bandeja: "Desliza una tarjeta para cambiar su estado."
 
 - La zona de "Derivar a mantención" tiene stopPropagation para no interferir con el gesto de deslizamiento.
+
+
+## v3.0.0
+
+- "En mora" renombrado a "Pago vencido" en la badge de la tarjeta de estado de cuenta y en la tabla de finanzas del administrador
+
+- Eliminado el bloque de alerta roja "Pago vencido — 52 días en mora…" del dashboard del arrendatario — la información queda solo en la badge de la tarjeta
+
+- El formulario "Crear Ticket" (antes "Crear Ticket de Mantención") ahora muestra exactamente 3 tipos: Queja — va al administrador de manera confidencial; muestra el ícono de candado y el texto "Confidencial — solo visible para la administración"
+Mantención — va al personal de mantención
+Conserjería — va a los conserjes
+
+- Al seleccionar una categoría se muestra debajo un texto informativo sobre a quién se enviará
+
+- Creado el componente genérico KanbanSwipeCard — tarjeta deslizable (táctil y ratón) sin botones, solo gesto
+
+- Creado el componente genérico KanbanBoard — tablero de 3 columnas que acepta tickets y un callback de estado; reutilizado en los tres roles operativos
+
+- Administrador — nuevo módulo Quejas accesible desde el sidebar (ícono de burbuja de advertencia); muestra las quejas confidenciales en un tablero kanban deslizable con aviso de confidencialidad
+
+- Conserje — reemplazado el listado plano por un tablero kanban de 3 columnas (Pendiente · En Proceso · Resuelto), filtrado solo a tickets de categoría Conserjería, con deslizamiento para cambiar estado
+
+- Personal de Mantención — eliminados los botones "Avanzar →" y "← Anterior"; el cambio de estado es ahora solo por deslizamiento. Se mantiene el botón "Solicitar autorización a propietario" en los tickets que lo requieren
+
+- El aviso de instrucción de deslizamiento aparece en todas las vistas de tablero para guiar al usuario
