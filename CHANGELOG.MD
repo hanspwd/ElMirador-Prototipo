@@ -92,3 +92,41 @@ Conserjería — va a los conserjes
 - El botón "Pagar en Línea · Webpay / Flow" abre un modal de 3 pasos: confirmación → procesando (animación 1.8s) → éxito.
 
 - Al completarse, despacha PAY_UNIT: cambia el estado de la unidad de "Pago vencido" o "Pendiente" a "Al día" en tiempo real. La tarjeta de la cuenta del residente se actualiza inmediatamente. Si ya está "Al día", el botón se reemplaza por una confirmación de pago completado.
+
+## v5.0.0
+
+- UnitPayment tiene ahora tres campos separados: unitValue (cuota de propietario o valor de arriendo), gastosComunes (prorrateo de servicios comunes) y amount (suma de ambos, el total a cobrar)
+
+- Los valores iniciales son realistas en CLP: propietarios con cuotas de 320k–420k, arrendatarios con arriendos de 520k–580k, gastos comunes ≈80,833/unidad (485,000 ÷ 6 unidades)
+
+- La tarjeta de cuenta del residente muestra el desglose completo: fila "Valor unidad", fila "Gastos comunes", línea divisoria y "Total mensual"
+
+- El modal de pago Webpay también muestra el desglose antes de confirmar
+
+- CALCULATE_CUOTAS solo actualiza el campo gastosComunes y recalcula amount = unitValue + gc, sin tocar el valor base de cada unidad
+
+- El botón de tres puntos en la tabla de usuarios fue reemplazado por un ícono de lápiz (Edit2) que abre el EditUserModal
+
+- El modal de edición permite: cambiar nombre, correo y teléfono; reasignar o asignar unidad; modificar el valor mensual de la unidad (arriendo/cuota); cambiar el estado del usuario entre Activo / Inactivo / Bloqueado
+
+- El estado "Bloqueado" muestra el avatar con ícono de candado rojo y el nombre tachado en la tabla
+
+- Al guardar: el UPDATE_USER del reducer actualiza el usuario en users, sincroniza el nombre en unitPayments, actualiza el unitValue en unitPayments y crea una nueva entrada de pago si se asigna una nueva unidad que no existía
+
+- El formulario de registro ahora incluye campo "Valor arriendo ($)" o "Cuota mensual ($)" (según si el rol es arrendatario o propietario) junto con el campo de unidad
+
+- Al crear el usuario, se genera automáticamente una entrada en unitPayments con el valor ingresado
+
+- Reemplazados los tickets genéricos por casos propios del rol de conserje: encargo postal pendiente de retiro (3 días), vehículo no autorizado en estacionamiento de visitas (requiere coordinación con municipalidad), solicitud de tarjeta de acceso de reemplazo. Todos describen situaciones de gestión de acceso, control de áreas comunes y atención a residentes
+
+- Cada tarjeta del tablero de Mantención tiene un menú de tres puntos (···) en la esquina superior derecha
+
+- El menú contiene la opción "Solicitar autorización a unidades…" (con ícono de escudo)
+
+- Al hacer clic se abre el AuthRequestModal: lista de inputs para ingresar IDs de unidad (muestra las disponibles), botón para agregar más unidades, campo de descripción del trabajo
+
+- Los inputs marcan en rojo las unidades no registradas en el sistema
+
+- Al enviar: se crea una AuthRequest por cada unidad válida, se notifica al propietario/arrendatario de cada una, y el modal confirma el envío
+
+- Los residentes afectados ven las solicitudes en su sección "Autorizaciones Solicitadas" y pueden aprobar/rechazar individualmente
