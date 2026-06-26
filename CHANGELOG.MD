@@ -53,3 +53,42 @@ Conserjería — va a los conserjes
 - Personal de Mantención — eliminados los botones "Avanzar →" y "← Anterior"; el cambio de estado es ahora solo por deslizamiento. Se mantiene el botón "Solicitar autorización a propietario" en los tickets que lo requieren
 
 - El aviso de instrucción de deslizamiento aparece en todas las vistas de tablero para guiar al usuario
+
+
+## v4.0.0
+
+- Implementado React Context con un reducer central que maneja tickets, usuarios, pagos, solicitudes de autorización, notificaciones y gastos como estado global reactivo. Todos los componentes leen y escriben al mismo estado — no hay estado local duplicado.
+
+- Cuando el personal de mantención presiona "Solicitar autorización a propietario", se despacha ADD_AUTH_REQUEST: crea la solicitud en el estado global Y genera una notificación automática para la unidad del propietario.
+
+- El dashboard del propietario lee authRequests filtrados por su unidad — las solicitudes aparecen al instante sin recargar. Al aprobar/rechazar, se dispara RESPOND_AUTH_REQUEST: actualiza la solicitud, sincroniza el authStatus del ticket, y envía notificación al personal de mantención.
+
+- Nueva sección "Mis Tickets" en los dashboards de Propietario y Arrendatario que lista todos los tickets de su unidad con su progreso actual (barra de 3 puntos: Pendiente → En proceso → Resuelto). Se actualiza en tiempo real cuando el personal cambia el estado.
+
+- La campana del header muestra un badge rojo con contador de notificaciones no leídas.
+
+- Al hacer clic se despliega un panel con todas las notificaciones relevantes para el rol/unidad del usuario actual.
+
+- Las notificaciones se marcan como leídas automáticamente al abrir el panel.
+
+- Botón "Marcar leídas" manual disponible.
+
+- Cada acción genera notificaciones automáticas: nuevo ticket → staff correspondiente; cambio de estado → propietario de la unidad; solicitud de autorización → propietario; respuesta de autorización → mantención; pago procesado → residente.
+
+- Notificaciones iniciales pre-cargadas para demostrar el sistema desde el inicio.
+
+- CreateTicketSection ahora despacha ADD_TICKET al estado global. El ticket aparece inmediatamente en el kanban de Mantención, Conserjería o Quejas según la categoría seleccionada — sin necesidad de recargar. CreateTicketSection recibe unit y owner como props.
+
+- RegisterUserModal despacha ADD_USER. Si el usuario tiene unidad asignada, se crea automáticamente una entrada en unitPayments con estado "Pendiente" y se refleja en la tabla del módulo de Finanzas al instante.
+
+- Nueva sección "Ingresar Gastos del Período" con selector de servicio (Agua, Gas, Electricidad, Limpieza, Seguro, etc.) e input de monto.
+
+- Tabla de gastos ingresados con botón de eliminar.
+
+- Cálculo en tiempo real de cuota por unidad (total ÷ número de unidades).
+
+- Al presionar "Calcular Cuotas y Prorrateo" se despacha CALCULATE_CUOTAS: actualiza los montos de todas las unidades, envía notificaciones a todos los residentes, y muestra confirmación con el valor calculado.
+
+- El botón "Pagar en Línea · Webpay / Flow" abre un modal de 3 pasos: confirmación → procesando (animación 1.8s) → éxito.
+
+- Al completarse, despacha PAY_UNIT: cambia el estado de la unidad de "Pago vencido" o "Pendiente" a "Al día" en tiempo real. La tarjeta de la cuenta del residente se actualiza inmediatamente. Si ya está "Al día", el botón se reemplaza por una confirmación de pago completado.
